@@ -174,7 +174,7 @@ export function OutstaffSection() {
       </div>
 
       {/* Header */}
-      <div className="relative z-10 pt-16 pb-12 md:pt-24 md:pb-16">
+      <div className="relative z-10 pt-24 pb-12 md:pt-36 md:pb-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -406,11 +406,6 @@ export function OutstaffSection() {
 
       {/* CTA Section */}
       <section className="relative z-10 py-24 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute right-0 top-0 h-[600px] w-[600px] translate-x-1/3 -translate-y-1/3 rounded-full bg-orange-500/10 blur-[120px]" />
-          <div className="absolute bottom-0 left-0 h-[400px] w-[400px] translate-x-[-30%] translate-y-[30%] rounded-full bg-amber-500/10 blur-[120px]" />
-        </div>
-
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">

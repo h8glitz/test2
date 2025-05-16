@@ -1,7 +1,7 @@
 "use client"
 
-import { useRef } from "react"
-import { motion, useScroll, useTransform } from "framer-motion"
+import { useRef, useState } from "react"
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 // Преимущества компании
@@ -71,22 +71,42 @@ const hiringSteps = [
   {
     number: 1,
     title: "Отправка резюме",
-    description: "Отправьте нам свое резюме через форму на сайте или на электронную почту"
+    description: "Отправьте нам свое резюме через форму на сайте или на электронную почту",
+    color: "bg-orange-600",
+    lightColor: "bg-orange-50",
+    borderColor: "border-orange-200",
+    hoverColor: "hover:bg-orange-100",
+    gradient: "from-orange-600 to-orange-500"
   },
   {
     number: 2,
     title: "Первичное интервью",
-    description: "Знакомство с компанией и обсуждение вашего опыта и ожиданий"
+    description: "Знакомство с компанией и обсуждение вашего опыта и ожиданий",
+    color: "bg-orange-500",
+    lightColor: "bg-orange-50",
+    borderColor: "border-orange-200",
+    hoverColor: "hover:bg-orange-100",
+    gradient: "from-orange-500 to-orange-400"
   },
   {
     number: 3,
     title: "Техническое собеседование",
-    description: "Оценка профессиональных навыков с нашими техническими специалистами"
+    description: "Оценка профессиональных навыков с нашими техническими специалистами",
+    color: "bg-orange-500",
+    lightColor: "bg-orange-50",
+    borderColor: "border-orange-200",
+    hoverColor: "hover:bg-orange-100",
+    gradient: "from-orange-500 to-orange-400"
   },
   {
     number: 4,
     title: "Принятие решения и предложение о работе",
-    description: "Обсуждение условий сотрудничества и оформление необходимых документов"
+    description: "Обсуждение условий сотрудничества и оформление необходимых документов",
+    color: "bg-orange-600",
+    lightColor: "bg-orange-50",
+    borderColor: "border-orange-200",
+    hoverColor: "hover:bg-orange-100",
+    gradient: "from-orange-600 to-orange-500"
   }
 ];
 
@@ -96,6 +116,9 @@ export function CareerSection() {
     target: containerRef,
     offset: ["start end", "end start"],
   });
+  
+  // Добавляем состояние для активного шага
+  const [activeStep, setActiveStep] = useState(0);
 
   const y1 = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const y2 = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
@@ -212,7 +235,7 @@ export function CareerSection() {
             viewport={{ once: true, margin: "-100px" }}
             className="mx-auto max-w-3xl"
           >
-            <div className="rounded-2xl bg-white overflow-hidden shadow-lg border border-zinc-100">
+            <div className="rounded-2xl bg-white overflow-hidden border border-zinc-100">
               <div className="bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 px-6 py-4">
                 <h2 className="text-2xl font-bold text-white">Информация об аккредитации</h2>
               </div>
@@ -347,8 +370,18 @@ export function CareerSection() {
       </section>
 
       {/* Hiring Process */}
-      <section className="relative z-10 py-16 md:py-24 bg-gradient-to-b from-zinc-50/50 to-white">
+      <section className="relative z-10 py-16 md:py-24 bg-white">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          {/* Декоративные блики */}
+          <motion.div
+            style={{ y: y1 }}
+            className="absolute right-0 top-0 h-[600px] w-[600px] translate-x-1/3 -translate-y-1/3 rounded-full bg-orange-500/10 blur-[120px]"
+          />
+          <motion.div
+            style={{ y: y2 }}
+            className="absolute bottom-0 left-0 h-[400px] w-[400px] translate-x-[-30%] translate-y-[30%] rounded-full bg-orange-500/10 blur-[120px]"
+          />
+          
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -357,7 +390,7 @@ export function CareerSection() {
             className="mx-auto max-w-3xl text-center mb-16"
           >
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Процесс найма <span className="bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 bg-clip-text text-transparent">прост и понятен</span>
+              Процесс найма <span className="bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">прост и понятен</span>
             </h2>
             <p className="mt-4 text-lg text-zinc-600">
               Всего несколько шагов отделяют вас от работы в нашей команде
@@ -365,46 +398,111 @@ export function CareerSection() {
           </motion.div>
 
           <div className="relative">
-            {/* Connecting line */}
-            <div className="absolute left-[50%] top-0 h-full w-0.5 -translate-x-1/2 bg-gradient-to-b from-orange-600 via-amber-600 to-yellow-600 hidden md:block"></div>
-
-            <div className="space-y-16 md:space-y-24">
+            {/* Карточки процесса найма */}
+            <div className="grid md:grid-cols-4 gap-6">
               {hiringSteps.map((step, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true, margin: "-100px" }}
+                  viewport={{ once: true, margin: "-50px" }}
                   className={cn(
-                    "relative grid gap-6 md:grid-cols-2",
-                    index % 2 === 0 ? "md:text-right" : "md:text-left md:flex-row-reverse",
-                    index % 2 === 0 ? "" : "md:[&>div:first-child]:col-start-2 md:[&>div:last-child]:col-start-1"
+                    "relative bg-white rounded-3xl shadow-md p-8",
+                    "flex flex-col h-full transition-all duration-300",
+                    activeStep === index ? `shadow-lg scale-[1.02] border-2 ${step.borderColor}` : `hover:shadow-lg hover:scale-[1.01] ${step.hoverColor}`
                   )}
+                  onClick={() => setActiveStep(index)}
                 >
-                  {/* Step content */}
-                  <div className={cn("flex flex-col", index % 2 === 0 ? "md:items-end" : "md:items-start")}>
-                    <div className="mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-orange-600 to-amber-600 text-white text-xl font-bold shadow-lg md:mx-0 mx-auto">
+                  <div className="flex items-start space-x-4 mb-4">
+                    {/* Цветной квадратный маркер с числом */}
+                    <div className={cn(
+                      "flex items-center justify-center w-16 h-16 rounded-2xl text-white text-2xl font-bold shadow-md",
+                      "bg-gradient-to-b",
+                      step.gradient
+                    )}>
                       {step.number}
                     </div>
-                    <h3 className="text-xl font-bold text-zinc-900 mb-2 md:mx-0 text-center md:text-inherit">
-                      {step.title}
-                    </h3>
-                    <p className="text-zinc-600 max-w-xs md:mx-0 mx-auto text-center md:text-inherit">
-                      {step.description}
-                    </p>
+                    
+                    {/* Белый круг для визуального эффекта */}
+                    <div className="w-14 h-14 bg-white rounded-full absolute right-6 top-6 border-4 border-orange-50"></div>
                   </div>
                   
-                  {/* Visual spacer for layout */}
-                  <div className="hidden md:block"></div>
+                  <h3 className="text-xl font-bold text-zinc-900 mt-4 mb-3">
+                    {step.title}
+                  </h3>
                   
-                  {/* Connection point on timeline */}
-                  <div className="absolute left-1/2 top-0 -translate-x-1/2 hidden md:block">
-                    <div className="h-6 w-6 rounded-full border-4 border-white bg-gradient-to-r from-orange-600 to-amber-600 shadow-md"></div>
-                  </div>
+                  <p className="text-zinc-600 flex-grow">
+                    {step.description}
+                  </p>
                 </motion.div>
               ))}
             </div>
+            
+            {/* Пагинация и переключение шагов */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              viewport={{ once: true }}
+              className="flex justify-center mt-12 space-x-4"
+            >
+              {hiringSteps.map((step, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveStep(index)}
+                  className={cn(
+                    "px-4 py-2 rounded-full transition-all duration-300",
+                    activeStep === index 
+                      ? `bg-gradient-to-r ${step.gradient} text-white font-medium shadow-md`
+                      : `${step.lightColor} text-orange-700 ${step.hoverColor}`
+                  )}
+                >
+                  Шаг {step.number}
+                </button>
+              ))}
+            </motion.div>
+            
+            {/* Информация о сроках */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              viewport={{ once: true }}
+              className="mt-16 bg-gradient-to-r from-orange-50 to-white rounded-3xl p-8 shadow-md border border-orange-100"
+            >
+              <div className="flex flex-col md:flex-row md:items-center gap-6">
+                <div className="flex-shrink-0">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-orange-600 to-orange-500 text-white shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="M12 6v6l4 2"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-grow">
+                  <h3 className="text-xl font-bold text-zinc-900 mb-2">
+                    Сроки рассмотрения заявок
+                  </h3>
+                  <p className="text-zinc-700">
+                    Мы стремимся оперативно обрабатывать все заявки. Обычно первый ответ вы получите в течение 
+                    <span className="font-semibold text-orange-600"> 3 рабочих дней</span> после отправки резюме. 
+                    Весь процесс найма занимает в среднем <span className="font-semibold text-orange-600">1-2 недели</span>.
+                  </p>
+                </div>
+                <div className="flex-shrink-0">
+                  <a
+                    href="#contact"
+                    className="inline-flex items-center rounded-full px-5 py-2.5 text-sm font-medium bg-gradient-to-r from-orange-600 to-orange-500 text-white shadow-md hover:shadow-lg transition-all duration-300"
+                  >
+                    Отправить резюме
+                    <svg className="ml-2 -mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
